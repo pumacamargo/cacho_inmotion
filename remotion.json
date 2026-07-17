@@ -1,0 +1,10 @@
+{
+  "crf": 18,
+  "concurrency": 4,
+  "maxRetries": 1,
+  "imageSequence": false,
+  "numberOfGifLoops": null,
+  "codec": "h264",
+  "proResProfile": "4444",
+  "x264Preset": "fast"
+}
