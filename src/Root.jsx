@@ -28,6 +28,7 @@ import { UmbrellaFanV2Overlay } from './UmbrellaFanV2Overlay';
 import { MonitorArmV3Overlay } from './MonitorArmV3Overlay';
 import { BagPackV2Overlay } from './BagPackV2Overlay';
 import { SeamlessInnerV4Overlay } from './SeamlessInnerV4Overlay';
+import { BodyBagAnimalOverlay } from './BodyBagAnimalOverlay';
 
 export const RemotionRoot = () => {
   return (
@@ -252,6 +253,14 @@ export const RemotionRoot = () => {
         id="ttchop-1733163391471617940-v4"
         component={SeamlessInnerV4Overlay}
         durationInFrames={1246}
+        fps={25}
+        width={1080}
+        height={1920}
+      />
+      <Composition
+        id="bodybag-animal-eilap09"
+        component={BodyBagAnimalOverlay}
+        durationInFrames={200}
         fps={25}
         width={1080}
         height={1920}
