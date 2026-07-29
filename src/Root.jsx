@@ -30,6 +30,7 @@ import { BagPackV2Overlay } from './BagPackV2Overlay';
 import { SeamlessInnerV4Overlay } from './SeamlessInnerV4Overlay';
 import { BodyBagAnimalOverlay } from './BodyBagAnimalOverlay';
 import { XbxArGlassesOverlay } from './XbxArGlassesOverlay';
+import { WaterproofHolderOverlay } from './WaterproofHolderOverlay';
 
 export const RemotionRoot = () => {
   return (
@@ -270,6 +271,14 @@ export const RemotionRoot = () => {
         id="xbx-ar-glasses-avb57za"
         component={XbxArGlassesOverlay}
         durationInFrames={304}
+        fps={25}
+        width={1080}
+        height={1920}
+      />
+      <Composition
+        id="waterproof-holder-w1qquv3"
+        component={WaterproofHolderOverlay}
+        durationInFrames={1000}
         fps={25}
         width={1080}
         height={1920}
