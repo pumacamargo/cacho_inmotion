@@ -31,6 +31,7 @@ import { SeamlessInnerV4Overlay } from './SeamlessInnerV4Overlay';
 import { BodyBagAnimalOverlay } from './BodyBagAnimalOverlay';
 import { XbxArGlassesOverlay } from './XbxArGlassesOverlay';
 import { WaterproofHolderOverlay } from './WaterproofHolderOverlay';
+import { SquishyLuckcatOverlay } from './SquishyLuckcatOverlay';
 
 export const RemotionRoot = () => {
   return (
@@ -279,6 +280,14 @@ export const RemotionRoot = () => {
         id="waterproof-holder-w1qquv3"
         component={WaterproofHolderOverlay}
         durationInFrames={1000}
+        fps={25}
+        width={1080}
+        height={1920}
+      />
+      <Composition
+        id="squishy-luckcat-x4u7naq"
+        component={SquishyLuckcatOverlay}
+        durationInFrames={1526}
         fps={25}
         width={1080}
         height={1920}
