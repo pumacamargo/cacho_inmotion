@@ -329,4 +329,4 @@ export const PriceShake = ({ localFrame, durationFrames, fps, current, original,
 };
 
 export const makeBaseTextStyle = (accent = DEFAULT_ACCENT) => ({ position: 'absolute', fontWeight: 'bold', color: accent });
-export const centerCard = { position: 'absolute', left: '50%', top: '28%', transform: 'translate(-50%, -50%) scale(1.5)' };
+export const centerCard = { position: 'absolute', left: '50%', top: '72%', transform: 'translate(-50%, -50%) scale(1.5)' };
