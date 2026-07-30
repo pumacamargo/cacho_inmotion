@@ -309,19 +309,20 @@ export const RotatingCarousel = ({ localFrame, durationFrames, fps, images, seco
   );
 };
 
-export const PriceShake = ({ localFrame, durationFrames, fps, current, original, discount, fomo, accent = DEFAULT_ACCENT }) => {
+export const PriceShake = ({ localFrame, durationFrames, fps, current, original, discount, fomo, accent = DEFAULT_ACCENT, currency = '¥' }) => {
   const { opacity } = envelope(localFrame, durationFrames, fps);
+  const disclaimer = currency === '¥' ? '※価格は予告なく変更される場合があります' : '※El precio puede cambiar sin previo aviso';
   return (
     <div style={{ opacity }}>
       <CameraShake frame={localFrame} amplitude={10} decayFrames={8}>
         <div style={{ background: 'rgba(20,20,20,0.85)', border: `4px solid ${accent}`, borderRadius: 28, padding: '28px 40px', textAlign: 'center', boxShadow: '0 16px 40px rgba(0,0,0,0.6)' }}>
           <div style={{ color: '#FF5C5C', fontSize: 22, fontWeight: 'bold', marginBottom: 4 }}>{fomo}</div>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: 14, justifyContent: 'center' }}>
-            <span style={{ color: accent, fontSize: 56, fontWeight: 'bold' }}>¥{current}</span>
-            {original && <span style={{ color: '#aaa', fontSize: 28, textDecoration: 'line-through' }}>¥{original}</span>}
+            <span style={{ color: accent, fontSize: 56, fontWeight: 'bold' }}>{currency}{current}</span>
+            {original && <span style={{ color: '#aaa', fontSize: 28, textDecoration: 'line-through' }}>{currency}{original}</span>}
             {discount && <span style={{ color: '#FF5C5C', fontSize: 30, fontWeight: 'bold' }}>{discount}</span>}
           </div>
-          <div style={{ color: 'rgba(255,255,255,0.55)', fontSize: 14, marginTop: 8 }}>※価格は予告なく変更される場合があります</div>
+          <div style={{ color: 'rgba(255,255,255,0.55)', fontSize: 14, marginTop: 8 }}>{disclaimer}</div>
         </div>
       </CameraShake>
     </div>

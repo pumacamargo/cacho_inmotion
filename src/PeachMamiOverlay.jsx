@@ -95,6 +95,7 @@ export const PeachMamiOverlay = () => {
               original={null}
               discount={null}
               fomo="Envío gratis · Fórmula limpia"
+              currency="$"
             />
           </div>
         )}
