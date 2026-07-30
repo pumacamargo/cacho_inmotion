@@ -33,6 +33,7 @@ import { XbxArGlassesOverlay } from './XbxArGlassesOverlay';
 import { WaterproofHolderOverlay } from './WaterproofHolderOverlay';
 import { SquishyLuckcatOverlay } from './SquishyLuckcatOverlay';
 import { PeachMamiOverlay } from './PeachMamiOverlay';
+import { BabyBusOverlay } from './BabyBusOverlay';
 
 export const RemotionRoot = () => {
   return (
@@ -297,6 +298,14 @@ export const RemotionRoot = () => {
         id="peachmami-67qzuoh"
         component={PeachMamiOverlay}
         durationInFrames={888}
+        fps={25}
+        width={1080}
+        height={1920}
+      />
+      <Composition
+        id="babybus-talking-bus-5vmfbzj"
+        component={BabyBusOverlay}
+        durationInFrames={942}
         fps={25}
         width={1080}
         height={1920}
