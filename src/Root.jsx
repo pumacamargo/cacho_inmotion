@@ -32,6 +32,7 @@ import { BodyBagAnimalOverlay } from './BodyBagAnimalOverlay';
 import { XbxArGlassesOverlay } from './XbxArGlassesOverlay';
 import { WaterproofHolderOverlay } from './WaterproofHolderOverlay';
 import { SquishyLuckcatOverlay } from './SquishyLuckcatOverlay';
+import { PeachMamiOverlay } from './PeachMamiOverlay';
 
 export const RemotionRoot = () => {
   return (
@@ -288,6 +289,14 @@ export const RemotionRoot = () => {
         id="squishy-luckcat-x4u7naq"
         component={SquishyLuckcatOverlay}
         durationInFrames={1526}
+        fps={25}
+        width={1080}
+        height={1920}
+      />
+      <Composition
+        id="peachmami-67qzuoh"
+        component={PeachMamiOverlay}
+        durationInFrames={888}
         fps={25}
         width={1080}
         height={1920}
