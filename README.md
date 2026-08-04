@@ -73,6 +73,34 @@ Para productos con overlay a medida (ej. `XrealV4Overlay.jsx`), el proceso es:
 2. Actualizar `durationInFrames` en `Root.jsx` (duración en segundos × 25 fps)
 3. Render directo sin pasar por ttchop-post: `npx remotion render index.ts <composition-id> /tmp/output.mp4`
 
+## Disclaimer overlay para videos AI (ffmpeg)
+
+Todo video generado con IA (Seedance, Veo3) debe llevar un disclaimer en la parte superior para evitar publicidad engañosa sobre tamaño/apariencia del producto.
+
+**Comando:**
+```bash
+FONT="/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc"
+
+# Línea 1: nombre/categoría del producto (cambiar por producto)
+echo -n "24.5インチタブレット" > /tmp/d1.txt
+# Líneas 2-3: disclaimer fijo (siempre igual)
+echo -n "※動画内のサイズは実際の商品と" > /tmp/d2.txt
+echo -n "異なる場合があります。仕様は商品説明をご確認ください。" > /tmp/d3.txt
+
+/usr/bin/ffmpeg -y -i input.mp4 \
+  -vf "drawtext=fontfile='$FONT':textfile=/tmp/d1.txt:fontsize=15:fontcolor=white:borderw=2:bordercolor=black:x=(w-text_w)/2:y=10,
+       drawtext=fontfile='$FONT':textfile=/tmp/d2.txt:fontsize=13:fontcolor=white:borderw=2:bordercolor=black:x=(w-text_w)/2:y=30,
+       drawtext=fontfile='$FONT':textfile=/tmp/d3.txt:fontsize=13:fontcolor=white:borderw=2:bordercolor=black:x=(w-text_w)/2:y=48" \
+  -codec:a copy output_disclaimer.mp4
+```
+
+**Notas importantes:**
+- Usar `/usr/bin/ffmpeg` (sistema), NO el de Homebrew — el de Homebrew no tiene libfreetype y no soporta `drawtext`
+- El texto en archivos `.txt` evita problemas de escape con caracteres japoneses en la terminal
+- Línea 1 cambia por producto (categoría en japonés). Líneas 2-3 son siempre el mismo disclaimer fijo
+- Posición: arriba centrado (`y=10, 30, 48`)
+- El video de Seedance sale en 496×864 (480p) — a esa resolución fontsize 15/13 queda bien
+
 ## Entrega por Telegram
 
 - Mandar el MP4 como archivo adjunto local (`files: [path]`) via reply tool — Telegram lo muestra **inline como video**, no como archivo descargable.
