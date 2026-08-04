@@ -73,8 +73,8 @@ export const PeachMamiOverlay = () => {
         )}
       </Phase>
 
-      {/* PRODUCTO: 26-32s — valores de marca */}
-      <Phase frame={frame} fps={fps} startSec={26.0} endSec={32.0}>
+      {/* PRODUCTO: 26-35.52s — valores de marca */}
+      <Phase frame={frame} fps={fps} startSec={26.0} endSec={35.52}>
         {(p) => (
           <div style={centerCard}>
             <NotificationPop {...p} accent={ACCENT} toasts={[
@@ -85,26 +85,6 @@ export const PeachMamiOverlay = () => {
           </div>
         )}
       </Phase>
-
-      {/* CTA: 32-35.52s — precio + llamada a acción */}
-      <Phase frame={frame} fps={fps} startSec={32.0} endSec={35.52}>
-        {(p) => (
-          <div style={centerCard}>
-            <PriceShake {...p} accent={ACCENT}
-              current="499"
-              original={null}
-              discount={null}
-              fomo="Envío gratis · Fórmula limpia"
-              currency="$"
-            />
-          </div>
-        )}
-      </Phase>
-
-      <PopText frame={frame} fps={fps} startSec={33.0} endSec={35.52}
-        style={{ ...baseTextStyle, left: 0, top: 1550, fontSize: 42, textAlign: 'center', width: 1080, fontWeight: 'bold' }}>
-        ¡No te lo pierdas!<br /><span style={{ fontSize: 30 }}>→ Checa el link</span>
-      </PopText>
     </AbsoluteFill>
   );
 };

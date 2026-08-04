@@ -34,6 +34,23 @@ import { WaterproofHolderOverlay } from './WaterproofHolderOverlay';
 import { SquishyLuckcatOverlay } from './SquishyLuckcatOverlay';
 import { PeachMamiOverlay } from './PeachMamiOverlay';
 import { BabyBusOverlay } from './BabyBusOverlay';
+import { ThermalPenOverlay } from './ThermalPenOverlay';
+import { KtcMonitorOverlay } from './KtcMonitorOverlay';
+import { OverlaySamplerOverlay } from './OverlaySamplerOverlay';
+import { ReviewCardOverlay } from './ReviewCardOverlay';
+import { SquishyLuckcatV2Overlay } from './SquishyLuckcatV2Overlay';
+import { XrealV2Overlay } from './XrealV2Overlay';
+import { AcrylicMarkerV2Overlay } from './AcrylicMarkerV2Overlay';
+import { ElectricScrubberOverlay } from './ElectricScrubberOverlay';
+import { SneakersOverlay } from './SneakersOverlay';
+import { GimbalOverlay } from './GimbalOverlay';
+import { XrealV3Overlay } from './XrealV3Overlay';
+import { XrealV4Overlay } from './XrealV4Overlay';
+import { MonitorArmA5Overlay } from './MonitorArmA5Overlay';
+import { AspiradoraOverlay } from './AspiradoraOverlay';
+import { AutoOverlay } from './AutoOverlay';
+import { FontStyleDemo } from './FontStyleDemo';
+import { TextAnimDemo, GlowCompareDemo } from './TextAnimDemo';
 
 export const RemotionRoot = () => {
   return (
@@ -306,6 +323,161 @@ export const RemotionRoot = () => {
         id="babybus-talking-bus-5vmfbzj"
         component={BabyBusOverlay}
         durationInFrames={942}
+        fps={25}
+        width={1080}
+        height={1920}
+      />
+      <Composition
+        id="thermal-pen-v2y1zfp"
+        component={ThermalPenOverlay}
+        durationInFrames={1068}
+        fps={25}
+        width={1080}
+        height={1920}
+      />
+      <Composition
+        id="ktc-monitor-5q8rz0m"
+        component={KtcMonitorOverlay}
+        durationInFrames={361}
+        fps={24}
+        width={1080}
+        height={1920}
+      />
+      <Composition
+        id="overlay-sampler"
+        component={OverlaySamplerOverlay}
+        durationInFrames={1068}
+        fps={25}
+        width={1080}
+        height={1920}
+      />
+      <Composition
+        id="review-card-demo"
+        component={ReviewCardOverlay}
+        durationInFrames={361}
+        fps={24}
+        width={1080}
+        height={1920}
+      />
+      <Composition
+        id="font-style-demo"
+        component={FontStyleDemo}
+        durationInFrames={361}
+        fps={24}
+        width={1080}
+        height={1920}
+      />
+      <Composition
+        id="text-anim-demo"
+        component={TextAnimDemo}
+        durationInFrames={600}
+        fps={24}
+        width={1080}
+        height={1920}
+      />
+      <Composition
+        id="glow-compare"
+        component={GlowCompareDemo}
+        durationInFrames={72}
+        fps={24}
+        width={1080}
+        height={1920}
+      />
+      <Composition
+        id="squishy-luckcat-x4u7naq-v2"
+        component={SquishyLuckcatV2Overlay}
+        durationInFrames={1066}
+        fps={25}
+        width={1080}
+        height={1920}
+      />
+      <Composition
+        id="xreal-avb57za-v2"
+        component={XrealV2Overlay}
+        durationInFrames={1504}
+        fps={25}
+        width={1080}
+        height={1920}
+      />
+      <Composition
+        id="acrylic-marker-n7opi4w-v2"
+        component={AcrylicMarkerV2Overlay}
+        durationInFrames={828}
+        fps={25}
+        width={1080}
+        height={1920}
+      />
+      <Composition
+        id="electric-scrubber-jq8k2vp"
+        component={ElectricScrubberOverlay}
+        durationInFrames={789}
+        fps={25}
+        width={1080}
+        height={1920}
+      />
+      <Composition
+        id="sneakers-mx-r4p9wkn"
+        component={SneakersOverlay}
+        durationInFrames={664}
+        fps={25}
+        width={1080}
+        height={1920}
+      />
+      <Composition
+        id="gimbal-7aj0wkc"
+        component={GimbalOverlay}
+        durationInFrames={1120}
+        fps={25}
+        width={1080}
+        height={1920}
+      />
+      <Composition
+        id="xreal-avb57za-v3"
+        component={XrealV3Overlay}
+        durationInFrames={1060}
+        fps={25}
+        width={1080}
+        height={1920}
+      />
+      <Composition
+        id="xreal-avb57za-v4"
+        component={XrealV4Overlay}
+        durationInFrames={625}
+        fps={25}
+        width={1080}
+        height={1920}
+      />
+      <Composition
+        id="monitor-arm-a5-a6eteco"
+        component={MonitorArmA5Overlay}
+        durationInFrames={912}
+        fps={25}
+        width={1080}
+        height={1920}
+      />
+      <Composition
+        id="aspiradora-q2p5dao"
+        component={AspiradoraOverlay}
+        durationInFrames={786}
+        fps={25}
+        width={1080}
+        height={1920}
+      />
+      <Composition
+        id="auto-overlay-default"
+        component={AutoOverlay}
+        calculateMetadata={({ props }) => ({
+          durationInFrames: Math.round((props.duration ?? 30) * 25),
+        })}
+        defaultProps={{
+          videoFile: 'auto_base.mp4',
+          duration: 30,
+          hook: ['🔥'],
+          features: [],
+          reviews: [],
+          fomo: { line1: '', line2: '' },
+          cta: { showPrice: false, priceLine: '', discountLine: '', fomoLine: '' },
+        }}
         fps={25}
         width={1080}
         height={1920}

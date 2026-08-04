@@ -42,3 +42,39 @@ Sin esto, el texto japonés y los emojis se renderizan invisibles/como cajas vac
 - `PriceShake` ya incluye el disclaimer `※価格は予告なく変更される場合があります` automáticamente — no agregarlo a mano.
 - CRF de exportación: 26 (`remotion.config.ts`) — buen balance calidad/tamaño para TikTok.
 - Nunca inventar descuentos: si `product.json` no tiene `price.discount`, usar otra señal real (`social_proof.sales_volume`, `free_shipping`, rating) en el `fomo`.
+
+## Pipeline con ttchop-server (collage + overlay)
+
+El flujo completo cuando se usa ttchop-server para generar el collage base:
+
+```
+1. POST /collage/dialogue { product, collageTemplate, language }
+   ← { dialogue: "script de voz..." }
+
+2. POST /collage/create { voiceId, dialogue, sessions, renderId, ... }
+   ← { videoUrl: "https://lemonsushi.com/.../collage.mp4" }
+
+3. POST ttchop-post /render { videoUrl, productUrl, market? }
+   ← MP4 con overlay animado
+```
+
+> ⚠️ **`sessions` en `/collage/create` DEBE incluir `downloadUrl` en cada video.** Si se pasan solo IDs, el LLM que genera el recipe de ffmpeg inventa URLs `gs://` incorrectas y el collage falla.
+
+**Voice IDs de ElevenLabs:**
+| Mercado | Voz | ID |
+|---------|-----|----|
+| 🇯🇵 JP | Announcer (masculino) | `gU0LNdkMOQCOrPrwtbee` |
+| 🇲🇽 MX | Jessica (femenino) | `cgSgspJ2msm6clMCkdW9` |
+
+### Overlays hardcodeados (timing personalizado)
+
+Para productos con overlay a medida (ej. `XrealV4Overlay.jsx`), el proceso es:
+1. Ajustar timings en el `.jsx` según la duración real del collage (ej. escalar de 39s → 25s si el collage quedó a 1.3x)
+2. Actualizar `durationInFrames` en `Root.jsx` (duración en segundos × 25 fps)
+3. Render directo sin pasar por ttchop-post: `npx remotion render index.ts <composition-id> /tmp/output.mp4`
+
+## Entrega por Telegram
+
+- Mandar el MP4 como archivo adjunto local (`files: [path]`) via reply tool — Telegram lo muestra **inline como video**, no como archivo descargable.
+- Si antes llegaba como archivo: era porque se mandaba el URL de Firebase (texto). Adjunto local = video inline.
+- Regla: adjunto local siempre. FTP/Firebase URL solo si el archivo supera ~50MB.

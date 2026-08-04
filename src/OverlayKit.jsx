@@ -4,6 +4,81 @@ import { Img, spring, interpolate } from 'remotion';
 export const SHADOW = '0 0 12px rgba(0,0,0,0.9), 2px 2px 0 rgba(0,0,0,0.9), -2px -2px 0 rgba(0,0,0,0.9), 2px -2px 0 rgba(0,0,0,0.9), -2px 2px 0 rgba(0,0,0,0.9)';
 export const DEFAULT_ACCENT = '#FFD700';
 export const EXIT_FRAMES = 8;
+export const DEFAULT_FONT = "'KeinannMaruPOPjp', 'けいなん丸ポップ体JP', 'Noto Color Emoji', 'Noto Sans CJK JP', sans-serif";
+
+// Estilo base para letras individuales — borde negro en 8 direcciones, sin glow (el glow va en el contenedor)
+export const OUTLINE_TEXT_STYLE = {
+  color: '#fff',
+  textShadow: '-7px -7px 0 #000, 7px -7px 0 #000, -7px 7px 0 #000, 7px 7px 0 #000, -10px 0 0 #000, 10px 0 0 #000, 0 -10px 0 #000, 0 10px 0 #000',
+  fontWeight: 400,
+  fontFamily: DEFAULT_FONT,
+  letterSpacing: 0,
+};
+
+// Genera el filter CSS de glow nivel B para un color y progreso dados
+// glowColor: '#fff' (textos normales) o '#FFD700' (hook)
+const makeGlowFilter = (color, progress) => {
+  const c = color.startsWith('#') ? hexToRgba(color) : color;
+  return [
+    `drop-shadow(0 0 6px ${c.replace('1)', `${progress})`).replace('rgb(', 'rgba(')})`,
+    `drop-shadow(0 0 20px ${c.replace('1)', `${(progress * 0.9).toFixed(2)})`).replace('rgb(', 'rgba(')})`,
+    `drop-shadow(0 0 40px ${c.replace('1)', `${(progress * 0.7).toFixed(2)})`).replace('rgb(', 'rgba(')})`,
+  ].join(' ');
+};
+const hexToRgba = (hex) => {
+  const h = hex.length === 4
+    ? `#${hex[1]}${hex[1]}${hex[2]}${hex[2]}${hex[3]}${hex[3]}`
+    : hex;
+  const r = parseInt(h.slice(1, 3), 16);
+  const g = parseInt(h.slice(3, 5), 16);
+  const b = parseInt(h.slice(5, 7), 16);
+  return `rgba(${r},${g},${b},1)`;
+};
+
+// WaveUpText — componente principal para texto nuevo
+// Letras aparecen una por una subiendo desde abajo (stagger=1 frame)
+// Glow de color en el contenedor (no entre letras), texto centrado en X
+// glowColor: '#FFD700' para hook, '#fff' para textos normales (default)
+export const WaveUpText = ({ frame, fps, startSec, endSec, children, style = {}, glowColor = '#fff' }) => {
+  const startF = startSec * fps;
+  const endF = endSec * fps;
+  if (frame < startF || frame >= endF) return null;
+  const local = frame - startF;
+  const durationF = endF - startF;
+  const text = typeof children === 'string' ? children : '';
+  const stagger = 1;
+
+  const appeared = [...text].filter((_, i) => {
+    const f = Math.max(0, local - i * stagger);
+    return spring({ frame: f, fps, config: { damping: 12, stiffness: 200 } }) > 0.05;
+  }).length;
+  const glowProgress = text.length > 0 ? appeared / text.length : 1;
+
+  // Salida rápida al final
+  const exitStart = durationF - EXIT_FRAMES;
+  const exitScale = local >= exitStart ? 1 - (local - exitStart) / EXIT_FRAMES : 1;
+
+  return (
+    <div style={{
+      position: 'absolute', left: 0, width: '100%', textAlign: 'center',
+      display: 'flex', justifyContent: 'center', flexWrap: 'nowrap', overflow: 'hidden',
+      filter: makeGlowFilter(glowColor, glowProgress * exitScale),
+      opacity: exitScale,
+      ...style,
+    }}>
+      {[...text].map((ch, i) => {
+        const f = Math.max(0, local - i * stagger);
+        const s = spring({ frame: f, fps, config: { damping: 12, stiffness: 200 } });
+        const y = interpolate(s, [0, 1], [30, 0]);
+        // Use non-breaking space so inline-block doesn't collapse whitespace
+        const display = ch === ' ' ? ' ' : ch;
+        return (
+          <span key={i} style={{ ...OUTLINE_TEXT_STYLE, display: 'inline-block', transform: `translateY(${y}px)`, opacity: s * exitScale }}>{display}</span>
+        );
+      })}
+    </div>
+  );
+};
 
 // Gates children to [startSec, endSec] and hands back a local frame clock.
 export const Phase = ({ frame, fps, startSec, endSec, children }) => {
@@ -329,5 +404,53 @@ export const PriceShake = ({ localFrame, durationFrames, fps, current, original,
   );
 };
 
-export const makeBaseTextStyle = (accent = DEFAULT_ACCENT) => ({ position: 'absolute', fontWeight: 'bold', color: accent });
+export const makeBaseTextStyle = (accent = DEFAULT_ACCENT) => ({ position: 'absolute', fontWeight: 'bold', color: accent, fontFamily: DEFAULT_FONT });
 export const centerCard = { position: 'absolute', left: '50%', top: '28%', transform: 'translate(-50%, -50%) scale(1.5)' };
+
+// Texto outlined pop-in/out reutilizable — estilo TikTok nativo, sin caja de fondo
+export const OutlinePopText = ({ frame, fps, startSec, endSec, children, style = {} }) => {
+  const startF = startSec * fps;
+  const endF = endSec * fps;
+  const localF = frame - startF;
+  const durationF = endF - startF;
+  if (frame < startF || frame >= endF) return null;
+  const enter = spring({ frame: localF, fps, config: { damping: 10, stiffness: 220 } });
+  const exitStart = durationF - EXIT_FRAMES;
+  const exit = localF >= exitStart ? 1 - (localF - exitStart) / EXIT_FRAMES : 1;
+  return (
+    <div style={{ transform: `scale(${enter * exit})`, opacity: enter * exit, ...style }}>
+      <span style={OUTLINE_TEXT_STYLE}>{children}</span>
+    </div>
+  );
+};
+
+// FloatingReviews — tarjetas de review TikTok Shop estilo sticker dispersas por el frame
+// Props: reviews = [{ username, stars, text, x, y, rotation, delay }]
+// Cada review aparece de forma escalonada según su `delay` (en frames)
+// Recomendado: 5 reviews con layout 2-1-2 (2 arriba, 1 medio, 2 abajo)
+// Sombra tipo sticker con rotaciones imperfectas para look orgánico
+export const FloatingReviews = ({ frame, fps, reviews = [], cardWidth = 470 }) => (
+  <>
+    {reviews.map((r, i) => {
+      const f = Math.max(0, frame - (r.delay || 0));
+      const s = spring({ frame: f, fps, config: { damping: 12, stiffness: 160 } });
+      const starsStr = '★'.repeat(r.stars || 5) + '☆'.repeat(5 - (r.stars || 5));
+      return (
+        <div key={i} style={{
+          position: 'absolute', left: r.x, top: r.y,
+          transform: `rotate(${r.rotation || 0}deg) scale(${s})`,
+          opacity: s, transformOrigin: 'center center', width: cardWidth,
+        }}>
+          <div style={{
+            background: '#fff', borderRadius: 18, padding: '18px 22px',
+            boxShadow: '7px 10px 0 rgba(0,0,0,0.35), 10px 18px 40px rgba(0,0,0,0.7)',
+          }}>
+            <div style={{ color: '#FFA500', fontSize: 26, marginBottom: 6 }}>{starsStr}</div>
+            <div style={{ color: '#111', fontSize: 26, fontWeight: 700, marginBottom: 6 }}>{r.username}</div>
+            <div style={{ color: '#333', fontSize: 24, lineHeight: 1.45 }}>{r.text}</div>
+          </div>
+        </div>
+      );
+    })}
+  </>
+);
