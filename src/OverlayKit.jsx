@@ -6,10 +6,21 @@ export const DEFAULT_ACCENT = '#FFD700';
 export const EXIT_FRAMES = 8;
 export const DEFAULT_FONT = "'KeinannMaruPOPjp', 'けいなん丸ポップ体JP', 'Noto Color Emoji', 'Noto Sans CJK JP', sans-serif";
 
-// Estilo base para letras individuales — borde negro en 8 direcciones, sin glow (el glow va en el contenedor)
+// Genera textShadow circular con N puntos — sin gaps, sin bumps
+const makeCircularShadow = (radius, color, steps = 24) => {
+  const s = [];
+  for (let i = 0; i < steps; i++) {
+    const a = (i * 2 * Math.PI) / steps;
+    const x = (Math.cos(a) * radius).toFixed(1);
+    const y = (Math.sin(a) * radius).toFixed(1);
+    s.push(`${x}px ${y}px 0 ${color}`);
+  }
+  return s.join(', ');
+};
+
 export const OUTLINE_TEXT_STYLE = {
   color: '#fff',
-  textShadow: '-7px -7px 0 #000, 7px -7px 0 #000, -7px 7px 0 #000, 7px 7px 0 #000, -10px 0 0 #000, 10px 0 0 #000, 0 -10px 0 #000, 0 10px 0 #000',
+  textShadow: makeCircularShadow(6, '#000', 24),
   fontWeight: 400,
   fontFamily: DEFAULT_FONT,
   letterSpacing: 0,
@@ -61,7 +72,7 @@ export const WaveUpText = ({ frame, fps, startSec, endSec, children, style = {},
   return (
     <div style={{
       position: 'absolute', left: 0, width: '100%', textAlign: 'center',
-      display: 'flex', justifyContent: 'center', flexWrap: 'nowrap', overflow: 'hidden',
+      display: 'flex', justifyContent: 'center', flexWrap: 'nowrap', overflow: 'visible',
       filter: makeGlowFilter(glowColor, glowProgress * exitScale),
       opacity: exitScale,
       ...style,
