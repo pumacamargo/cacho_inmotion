@@ -101,8 +101,37 @@ echo -n "異なる場合があります。仕様は商品説明をご確認く�
 - Posición: arriba centrado (`y=10, 30, 48`)
 - El video de Seedance sale en 496×864 (480p) — a esa resolución fontsize 15/13 queda bien
 
+## Portadas (thumbnails)
+
+- Siempre extraer el frame del **collage base** (`collage/YYYY-MM-DD_JOBID.mp4`) o del AI video — nunca del overlay.
+- El overlay tiene gráficos encima que tapan el frame limpio.
+- El URL del collage base aparece en los logs de PM2 como `[JOBID] Public URL` antes de que el overlay sobreescriba el videoUrl en Firestore.
+- Texto siempre en inglés (sin importar si el video es JP o MX).
+
+```bash
+python3 /root/ttchop-server/scripts/thumbnail_maker.py \
+  "<collage_url>" "Product Name in English" /tmp/thumb.jpg
+```
+
 ## Entrega por Telegram
 
 - Mandar el MP4 como archivo adjunto local (`files: [path]`) via reply tool — Telegram lo muestra **inline como video**, no como archivo descargable.
 - Si antes llegaba como archivo: era porque se mandaba el URL de Firebase (texto). Adjunto local = video inline.
 - Regla: adjunto local siempre. FTP/Firebase URL solo si el archivo supera ~50MB.
+
+## Cambios 2026-08-06
+
+### Bugs corregidos en ttchop (frontend)
+
+- **Renders crash**: `StatusBadge` no manejaba el status `'running'` → crash. Fix: ttchop-server ahora escribe `'processing'`.
+- **Veo3 nunca llegaba a kie.ai**: la comparación en databaseService era `=== 'veo3'` (minúscula) pero el dropdown mandaba `'Veo3'` (capital). Fix: `.toLowerCase()` en la comparación. Esto afectaba SERVER mode — prod/test van por n8n que hacía su propia comparación con `'Veo3'` correctamente.
+- **Scheduler bloqueado por índice Firestore**: se desplegó un índice compuesto en `scheduled_renders` que Firestore rechazaba mientras construía. Fix: eliminar el índice compuesto — el scheduler solo necesita filtro de campo único (`status == 'pending'`).
+- **CalendarView en inglés solamente**: días y meses estaban hardcodeados en inglés. Fix: i18n completo con claves separadas por comas para arrays.
+- **Collage + overlay encadenado**: nuevo checkbox en modo SERVER de la vista Collage para activar overlay automático al terminar el collage.
+
+### Formato correcto de kie.ai para SERVER mode
+
+Verificado contra el workflow de n8n (ttchop_webapp.json):
+- Veo3: `imageUrls: [url]` (array con 1+ imágenes) al endpoint `/api/v1/veo/generate`
+- Seedance: `reference_image_urls: [images[0]]` (1 imagen) dentro de `input{}` al endpoint `/api/v1/jobs/createTask`
+- kie.ai devuelve HTTP 200 aunque haya error — verificar `data.code === 200`
