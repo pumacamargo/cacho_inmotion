@@ -1,5 +1,11 @@
 import React from 'react';
-import { Img, OffthreadVideo, Sequence, useVideoConfig } from 'remotion';
+import { Img, Sequence, useVideoConfig } from 'remotion';
+import { Video } from '@remotion/media';
+import { colorKey } from '@remotion/effects/color-key';
+
+// Mismo green screen key que usa AutoOverlay.jsx para sus FX (GS_KEY) — si algún
+// día se sube un video de mascota con otro tono de verde, ajustar aquí también.
+const MASCOT_GS_KEY = colorKey({ keyColor: '#00b140', similarity: 0.35, smoothness: 0.1 });
 
 // ── Tunable placement constants ──────────────────────────────────────────────
 // Adjust these to reposition/resize the mascot without touching the JSX below.
@@ -38,6 +44,13 @@ const cornerStyle = (corner, margin) => {
 //   }>
 //
 // Renders nothing if `mascotSegments` is empty/undefined.
+//
+// Chroma key: video segments get real-time green-screen removal via the same
+// colorKey effect AutoOverlay.jsx uses for its own FX (@remotion/media's Video
+// component supports an `effects` prop; there is no equivalent for `Img` in
+// this Remotion version). Image segments must therefore already be pre-processed
+// to a transparent background BEFORE upload — see uploadMascotAsset in ttchop2's
+// databaseService.ts, which does this client-side at upload time.
 export const MascotOverlay = ({ mascotSegments = [] }) => {
   const { fps, width } = useVideoConfig();
   const size = Math.round(width * MASCOT_WIDTH_FRACTION);
@@ -60,8 +73,9 @@ export const MascotOverlay = ({ mascotSegments = [] }) => {
               }}
             >
               {seg.type === 'video' ? (
-                <OffthreadVideo
+                <Video
                   src={seg.url}
+                  effects={[MASCOT_GS_KEY]}
                   style={{ width: '100%', height: '100%', objectFit: 'contain' }}
                 />
               ) : (
