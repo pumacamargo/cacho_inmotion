@@ -3,6 +3,7 @@ import { AbsoluteFill, OffthreadVideo, Sequence, staticFile, useCurrentFrame, us
 import { Video } from '@remotion/media';
 import { colorKey } from '@remotion/effects/color-key';
 import { WaveUpText, CameraShake, Phase, FloatingReviews, DEFAULT_ACCENT } from './OverlayKit';
+import { MascotOverlay } from './MascotOverlay';
 
 const GS_KEY = colorKey({ keyColor: '#00b140', similarity: 0.35, smoothness: 0.1 });
 
@@ -51,6 +52,7 @@ export const AutoOverlay = ({
   reviews = [],
   fomo = { line1: '', line2: '' },
   cta = { showPrice: false, priceLine: '', discountLine: '', fomoLine: '' },
+  mascotSegments = [],
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -193,6 +195,11 @@ export const AutoOverlay = ({
           style={{ top: cta.discountLine ? 730 : 600, fontSize: 56 }}>
           {cta.fomoLine}
         </WaveUpText>
+      )}
+
+      {/* ═══════ MASCOT (optional, purely additive) ═══════ */}
+      {mascotSegments && mascotSegments.length > 0 && (
+        <MascotOverlay mascotSegments={mascotSegments} />
       )}
 
     </AbsoluteFill>
