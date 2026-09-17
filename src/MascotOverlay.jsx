@@ -5,7 +5,7 @@ import { Img, OffthreadVideo, Sequence, useVideoConfig } from 'remotion';
 // Adjust these to reposition/resize the mascot without touching the JSX below.
 // Uses the same px-margin / fraction-of-composition convention as
 // AutoOverlay.jsx's REVIEW_POSITIONS (absolute px anchored to the 1080x1920 canvas).
-export const MASCOT_WIDTH_FRACTION = 0.2; // mascot box width, as a fraction of composition width (~20%)
+export const MASCOT_WIDTH_FRACTION = 0.6; // mascot box width, as a fraction of composition width (~60%, 3x el tamaño original de 0.2)
 export const MASCOT_MARGIN_PX = 40; // margin from the screen edge, in px
 export const MASCOT_CORNER = 'bottom-right'; // 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left'
 
