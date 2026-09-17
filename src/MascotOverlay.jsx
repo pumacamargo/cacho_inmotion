@@ -3,9 +3,13 @@ import { Img, Sequence, staticFile, useVideoConfig } from 'remotion';
 import { Video } from '@remotion/media';
 import { colorKey } from '@remotion/effects/color-key';
 
-// Mismo green screen key que usa AutoOverlay.jsx para sus FX (GS_KEY) — si algún
-// día se sube un video de mascota con otro tono de verde, ajustar aquí también.
-const MASCOT_GS_KEY = colorKey({ keyColor: '#00b140', similarity: 0.35, smoothness: 0.1 });
+// Verde real medido de los videos de mascota (no es el mismo tono que el GS_KEY
+// de los FX de AutoOverlay.jsx — cada fuente de green screen puede variar). Con
+// #00b140/0.35 quedaba halo azulado en los bordes; #2fb22c/0.30 lo redujo mucho
+// sin lavar el azul de la gorra/short ni el naranja de la playera (probado sobre
+// fondo blanco, 8 combinaciones). Si se sube un nuevo video de mascota con otro
+// tono de verde, volver a medir el color real antes de asumir que este sirve.
+const MASCOT_GS_KEY = colorKey({ keyColor: '#2fb22c', similarity: 0.30, smoothness: 0.1 });
 
 // ── Tunable placement constants ──────────────────────────────────────────────
 // Adjust these to reposition/resize the mascot without touching the JSX below.
