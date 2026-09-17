@@ -1,5 +1,5 @@
 import React from 'react';
-import { Img, Sequence, useVideoConfig } from 'remotion';
+import { Img, Sequence, staticFile, useVideoConfig } from 'remotion';
 import { Video } from '@remotion/media';
 import { colorKey } from '@remotion/effects/color-key';
 
@@ -39,11 +39,18 @@ const cornerStyle = (corner, margin) => {
 //   mascotSegments: Array<{
 //     startSec: number,  // seconds from composition start
 //     endSec: number,    // seconds from composition start
-//     url: string,       // resolved URL/src for the image or video asset
+//     url: string,       // LOCAL filename under public/ (see below -- not a remote URL)
 //     type: 'image' | 'video',
 //   }>
 //
 // Renders nothing if `mascotSegments` is empty/undefined.
+//
+// `url` must be a local filename already downloaded into public/ by the caller
+// (overlay-server's downloadMascotAssets, mirroring how the main videoFile is
+// handled) -- NOT a remote URL. Real-time effects (colorKey) only work reliably
+// on same-origin/staticFile assets; a cross-origin fetch from the renderer's
+// browser hits CORS and silently falls back to a mode with no effects support.
+// This is exactly why AutoOverlay.jsx's own FX clips are bundled locally too.
 //
 // Chroma key: video segments get real-time green-screen removal via the same
 // colorKey effect AutoOverlay.jsx uses for its own FX (@remotion/media's Video
@@ -74,13 +81,13 @@ export const MascotOverlay = ({ mascotSegments = [] }) => {
             >
               {seg.type === 'video' ? (
                 <Video
-                  src={seg.url}
+                  src={staticFile(seg.url)}
                   effects={[MASCOT_GS_KEY]}
                   style={{ width: '100%', height: '100%', objectFit: 'contain' }}
                 />
               ) : (
                 <Img
-                  src={seg.url}
+                  src={staticFile(seg.url)}
                   style={{ width: '100%', height: '100%', objectFit: 'contain' }}
                 />
               )}
