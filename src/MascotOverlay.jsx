@@ -3,13 +3,14 @@ import { Img, Sequence, staticFile, useVideoConfig } from 'remotion';
 import { Video } from '@remotion/media';
 import { colorKey } from '@remotion/effects/color-key';
 
-// Verde real medido de los videos de mascota (no es el mismo tono que el GS_KEY
-// de los FX de AutoOverlay.jsx — cada fuente de green screen puede variar). Con
-// #00b140/0.35 quedaba halo azulado en los bordes; #2fb22c/0.30 lo redujo mucho
-// sin lavar el azul de la gorra/short ni el naranja de la playera (probado sobre
-// fondo blanco, 8 combinaciones). Si se sube un nuevo video de mascota con otro
-// tono de verde, volver a medir el color real antes de asumir que este sirve.
-const MASCOT_GS_KEY = colorKey({ keyColor: '#2fb22c', similarity: 0.30, smoothness: 0.1 });
+// Verde real medido de los videos de mascota. Parámetros:
+// - similarity 0.15: más conservador que el 0.30 anterior (que quitaba pixels del interior
+//   del personaje, dejándolo semitransparente). El default de Remotion es 0.18.
+// - smoothness 0.08: default de Remotion — bordes más suaves que el 0.10 anterior.
+// - spillSuppression 0.1: reduce el tinte verde en los bordes sin desvanecer colores del personaje.
+// Si vuelve el halo azulado en los bordes, subir spillSuppression (no similarity).
+// Si el fondo verde no se quita limpio, subir similarity de 0.01 en 0.01 hasta que desaparezca.
+const MASCOT_GS_KEY = colorKey({ keyColor: '#2fb22c', similarity: 0.15, smoothness: 0.08, spillSuppression: 0.1 });
 
 // ── Tunable placement constants ──────────────────────────────────────────────
 // Adjust these to reposition/resize the mascot without touching the JSX below.
@@ -81,6 +82,7 @@ export const MascotOverlay = ({ mascotSegments = [] }) => {
                 width: size,
                 height: size,
                 pointerEvents: 'none',
+                filter: 'drop-shadow(14px 18px 10px rgba(0,0,0,0.75))',
               }}
             >
               {seg.type === 'video' ? (
